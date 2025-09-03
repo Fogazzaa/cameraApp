@@ -2,7 +2,7 @@ import React from "react";
 import { View, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import api from "./services/api";
+import api from "./services/axios";
 
 const HomeScreen = () => {
   const [stateLed, setStateLed] = useState({ value: false });

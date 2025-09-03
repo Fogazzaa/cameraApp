@@ -1,16 +1,35 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://io.adafruit.com/api/v2/fogazza/feeds/",
+  baseURL: "http://10.89.240.91:5000/api/v1",
   headers: {
     accept: "application/json",
-    "Content-Type": "application/json",
-    "X-AIO-Key": "aio_yuwn43VjTMw8ncn46128ivfdanA6",
   },
 });
 
-const sheets = {
-  toggleLed: (stateLed) => api.post(`botaoled/data`, stateLed),
-};
+export const createEvento = async (form, imageUri) => {
+  const data = new FormData();
 
-export default sheets;
+  for (let key in form) {
+    data.append(key, form[key]);
+  }
+
+  if (imageUri) {
+    const fileName = imageUri.split("/").pop();
+    const match = /|.(\w+)$/.exec(fileName);
+    // [".extensao", "extensao"], ex: [".png", "png"]
+    const type = match ? `image/${match[1]}` : `image`;
+
+    data.append("imagem", {
+      uri: imageUri,
+      name: fileName,
+      type: type,
+    });
+  }
+
+  return api.post("/evento", data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
