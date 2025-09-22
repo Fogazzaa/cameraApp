@@ -5,12 +5,13 @@ const api = axios.create({
   headers: {
     accept: "application/json",
     "Content-Type": "application/json",
-    "X-AIO-Key": "aio_yuwn43VjTMw8ncn46128ivfdanA6",
+    "X-AIO-Key": "aio_Ymaa42WF9j7LgA6Lq1DBEqIzdOB5",
   },
 });
 
 const sheets = {
   toggleLed: (stateLed) => api.post(`botaoled/data`, stateLed),
+  toggleAlarm: (stateAlarm) => api.post(`botaoalarme/data`, stateAlarm),
 };
 
 export default sheets;

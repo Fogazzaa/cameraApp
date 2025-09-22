@@ -6,6 +6,7 @@ import api from "./services/axios";
 
 const HomeScreen = () => {
   const [stateLed, setStateLed] = useState({ value: false });
+  const [stateAlarm, setStateAlarm] = useState({ value: false });
   const navigation = useNavigation();
 
   const handleCam = () => {
@@ -22,6 +23,16 @@ const HomeScreen = () => {
     }
   }
 
+  async function alarmToogle() {
+    try {
+      const response = await api.toggleAlarm({ value: `${!stateAlarm.value}` });
+      setStateAlarm({ value: !stateAlarm.value });
+      console.log("Resposta: ", response.data);
+    } catch (error) {
+      console.log("Erro: ", error.response.data);
+    }
+  }
+
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <View style={{ marginBottom: 20 }}>
@@ -32,6 +43,13 @@ const HomeScreen = () => {
           title={stateLed.value ? "Desligar LED" : "Ligar LED"}
           onPress={ledToogle}
           color={stateLed.value ? "red" : "green"}
+        />
+      </View>
+      <View style={{ marginBottom: 20 }}>
+        <Button
+          title={stateAlarm.value ? "Desligar ALARME" : "Ligar ALARME"}
+          onPress={alarmToogle}
+          color={stateAlarm.value ? "red" : "green"}
         />
       </View>
       <View>
