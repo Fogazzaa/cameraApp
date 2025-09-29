@@ -12,6 +12,7 @@ const api = axios.create({
 const sheets = {
   toggleLed: (stateLed) => api.post(`botaoled/data`, stateLed),
   toggleAlarm: (stateAlarm) => api.post(`botaoalarme/data`, stateAlarm),
+  getAlarm: () => api.get(`botaoalarme/`),
 };
 
 export default sheets;

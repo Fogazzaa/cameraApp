@@ -1,13 +1,27 @@
 import React from "react";
-import { View, Button } from "react-native";
+import { View, Button, ActivityIndicator, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import api from "./services/axios";
 
 const HomeScreen = () => {
   const [stateLed, setStateLed] = useState({ value: false });
-  const [stateAlarm, setStateAlarm] = useState({ value: false });
+  const [stateAlarm, setStateAlarm] = useState({ value: null });
   const navigation = useNavigation();
+
+  async function getAlarme() {
+    try {
+      const response = await api.getAlarme();
+      const value = response.data.last_value === "true";
+      setStateAlarm({ value: value });
+    } catch (error) {
+      setStateAlarm({ value: false });
+    }
+  }
+
+  useEffect(() => {
+    getAlarme();
+  }, []);
 
   const handleCam = () => {
     navigation.navigate("Cam");
@@ -15,22 +29,31 @@ const HomeScreen = () => {
 
   async function ledToogle() {
     try {
-      const response = await api.toggleLed({ value: `${!stateLed.value}` });
+      await api.toggleLed({ value: `${!stateLed.value}` });
       setStateLed({ value: !stateLed.value });
-      console.log("Resposta: ", response.data);
     } catch (error) {
-      console.log("Erro: ", error.response.data);
     }
   }
 
   async function alarmToogle() {
-    try {
-      const response = await api.toggleAlarm({ value: `${!stateAlarm.value}` });
-      setStateAlarm({ value: !stateAlarm.value });
-      console.log("Resposta: ", response.data);
-    } catch (error) {
-      console.log("Erro: ", error.response.data);
+    if (stateAlarm.value === null) {
+      return;
     }
+
+    try {
+      await api.toggleAlarm({ value: `${!stateAlarm.value}` });
+      setStateAlarm({ value: !stateAlarm.value });
+    } catch (error) {
+    }
+  }
+
+  if (stateAlarm.value === null) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text style={{ marginTop: 10 }}>Carregando estado do alarme...</Text>
+      </View>
+    );
   }
 
   return (
