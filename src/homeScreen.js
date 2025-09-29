@@ -11,7 +11,7 @@ const HomeScreen = () => {
 
   async function getAlarme() {
     try {
-      const response = await api.getAlarme();
+      const response = await api.getAlarm();
       const value = response.data.last_value === "true";
       setStateAlarm({ value: value });
     } catch (error) {
@@ -41,8 +41,9 @@ const HomeScreen = () => {
     }
 
     try {
-      await api.toggleAlarm({ value: `${!stateAlarm.value}` });
-      setStateAlarm({ value: !stateAlarm.value });
+      const newValue = !stateAlarm.value;
+      await api.toggleAlarm({ value: `${newValue}` });
+      setStateAlarm({ value: newValue });
     } catch (error) {
     }
   }
